@@ -16,8 +16,12 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import Vant from 'vant'
 // import 'vant/lib/index.css'
 
+import { createPinia } from 'pinia'; // ⑧ Pinia（任务 8）
 import App from './App.vue'
 import router from './router'; // 第 5 章的路由，今天当"实验台导航"复用
+import store from './store'; // ⑦ Vuex（任务 7）：一个变量，全家共享
+
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 
@@ -29,5 +33,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(ElementPlus)
 // app.use(Vant)
 app.use(router)
+
+app.use(store)           // Vuex 装上后，任何组件都能 this.$store 取到同一个仓库
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)   // 挂持久化插件：管 store 里的数据要不要存 localStorage
+app.use(pinia)
 
 app.mount('#app')
